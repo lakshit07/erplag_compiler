@@ -1,0 +1,51 @@
+program  moduleDeclarations otherModules driverModule otherModules .
+moduleDeclarations moduleDeclaration moduleDeclarations | eps .
+moduleDeclaration  ID .
+otherModules  module otherModules | eps .
+driverModule moduleDef .
+module ID input_plist ret moduleDef .
+ret  output_plist | eps .
+input_plist  ID dataType N1 .
+N1  ID dataType N1 | eps .
+output_plist  ID type N2 .
+N2  ID COLON type N2 | eps .
+dataType  INTEGER | REAL | BOOLEAN | range type .
+type INTEGER | REAL | BOOLEAN .
+moduleDef START statements END .
+statements  statement statements | eps .
+statement  ioStmt | simpleStmt | declareStmt | conditionalStmt | iterativeStmt .
+ioStmt  ID whichId | var .
+var  ID whichId | NUM | RNUM .
+whichId  index2 | eps .
+simpleStmt  assignmentStmt | moduleReuseStmt .
+assignmentStmt  ID whichStmt .
+whichStmt  lvalueIDStmt | lvalueARRStmt .
+lvalueIDStmt  expression .
+lvalueARRStmt  index2 expression .
+index2 NUM | ID .
+moduleReuseStmt  optional ID idList  .
+optional  idList | eps .
+idList  ID N3 .
+N3  ID N3 | eps .
+expression arithmeticOrBooleanExpr | MINUS arithmeticExpr | PLUS arithmeticExpr .
+arithmeticOrBooleanExpr AnyTerm N7 .
+N7  logicalOp AnyTerm N7 | eps .
+AnyTerm arithmeticExpr N8 .
+N8  relationalOp arithmeticExpr N8 | eps .
+arithmeticExpr term N4 .
+N4  op1 term N4 | eps .
+term  factor N5 .
+N5  op2 factor N5 | eps .
+factor var | arithmeticOrBooleanExpr .
+op1  PLUS | MINUS .
+op2  MUL | DIV .
+logicalOp AND | OR .
+relationalOp  LT | LE | GT | GE | EQ | NE .
+declareStmt  idList dataType .
+conditionalStmt ID START caseStmts Default END .
+caseStmts  value statements N9 .
+N9  value statements N9 | eps .
+value  NUM | TRUE | FALSE .
+Default  statements | eps .
+iterativeStmt  FOR ID range START statements END | WHILE expression START statements END .
+range NUM NUM .
